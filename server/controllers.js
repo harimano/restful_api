@@ -1,64 +1,39 @@
-
-const mongoose = require('mongoose'),
-Task = mongoose.model('Task')
+const Task = require('./models');
 
 module.exports = {
 
-    index: (req, res) =>{
+  getAllTasks: (req, res) => {
+    Task.find()
+      .then(data => console.log(data) || res.json(data))
+      .catch(err => console.log(err) || res.json(err));
+  },
 
-        Task.find({}, function(err, tasks) {
-            if(err) {
-                console.log('something went wrong');
-                } else { // else console.log that we did well and then redirect to the root route
-                console.log('here you go');
-                }
-        res.json(tasks);
-        })
+  getOneTask: (req, res) => {
+    const ID = req.params.id;
+    Task.findOne({_id:ID})
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  },
 
-    },
+  createTask: (req, res) => {
+    const DATA = req.body;
+    Task.create(DATA)
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  },
 
-    result: (req, res) =>{
-        Task.findOne({id:req.params._id}, function(err, tasks) {
-            if(err) {
-                console.log('something went wrong');
-                } else { // else console.log that we did well and then redirect to the root route
-                console.log('here you go');
-                res.json(tasks);
-                }
-        });
-},
+  updateTask: (req, res) => {
+    const ID = req.params.id;
+    const DATA = req.body;
+    Task.findOneAndUpdate({_id:ID}, DATA, {runValidators:true, new:true})
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  },
 
-    newtask:(req, res) =>{
-            console.log("POST DATA", req.body);
-            // create a new User with the name and age corresponding to those from req.body
-            var task = new Task(req.body);
-            task.save(function(err) {
-                if(err) {
-                console.log('something went wrong');
-                } else { 
-                console.log('successfully added a task!');
-                }
-            res.json(task);
-            })
-    },
-
-    updatetask:(req, res) =>{
-        Task.findOneAndUpdate({id:req.params._id ,title:req.body.title,  description:req.body.description, completed:req.body.completed}, function(err) {
-            if(err) {
-            console.log('something went wrong');
-            } else { 
-            console.log('successfully added a task!');
-            }
-        res.json(task);
-        })
-},
-    removetask:(req, res) =>{
-        console.log("POST DATA", req.body);
-        // create a new User with the name and age corresponding to those from req.body
-        Task.remove({id:req.params._id},function(err) {
-            console.log('successfully deleted a user!');
-        res.redirect('/');
-        })
-    },
-    
-    }
+  deleteTask: (req, res) => {
+    const ID = req.params.id;
+    Task.findOneAndDelete({_id:ID})
+      .then(data => res.json(data))
+      .catch(err => res.json(err));
+  }
+}

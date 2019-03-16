@@ -1,18 +1,11 @@
-///////// ROUTES /////////////
-
-const mongoose = require('mongoose'),
-Task = mongoose.model('Task')
 const controllers = require('./controllers.js');
-module.exports = function(app){
 
-    app.get('/', controllers.index);
-     
-    app.get('/:id', controllers.result);
+module.exports = app => {
 
-    app.post('/:name',controllers.newtask);
-
-    app.put('/update/:id', controllers.updatetask);
-
-    app.delete('/:name',controllers.removetask);
-
+  app
+    .get('/api/tasks', controllers.getAllTasks)
+    .get('api/tasks/:id', controllers.getOneTask)
+    .post('api/tasks', controllers.createTask)
+    .put('api/tasks/update/:id', controllers.updateTask)
+    .delete('api/tasks/:id', controllers.deleteTask);
 }

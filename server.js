@@ -1,24 +1,8 @@
-var express = require("express");
-var path = require("path");
-var bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require('body-parser');
+const port = 8000;
+const app = express();
 
-var app = express();
-var mongoose = require('mongoose');
-app.use(express.static(path.join(__dirname, "./public")));
 app.use(bodyParser.json());
-app.set('views', path.join(__dirname, './client/views'));
-app.set('view engine', 'ejs');
-
-
-mongoose.connect('mongodb://localhost/restful_api');
-mongoose.Promise = global.Promise;
-
-
-const models = require("./server/models.js");
-var Task = mongoose.model('Task'); 
-
-
+app.listen(port, () => console.log(`Listening to port ${port}`));
 require('./server/routes.js')(app)
-
-app.listen(8000, function() {
-});
